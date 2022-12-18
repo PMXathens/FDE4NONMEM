@@ -3,3 +3,6 @@ The original Fractional Differential Equation Solver subroutine for the implemen
 The repository consists of the following:
 - The FORTRAN subroutine "FDEGL.f90"
 - The FDE numerical solver using the Grunwald-Letnikov Scheme written in MATLAB
+- A Control File Template for a Linear Model
+- A Simulated dataset for running the Control File
+- A short user-manual
