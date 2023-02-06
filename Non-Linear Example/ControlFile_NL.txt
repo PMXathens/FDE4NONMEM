@@ -1,0 +1,52 @@
+$PROBLEM NL EXAMPLE
+$INPUT ID AMT TIME DV EVID MDV
+$DATA SIMDATANL.txt
+$SUBROUTINES OTHER=FDEGL.f90
+$PRED
+
+
+MU_1=LOG(THETA(1))
+Vmax=DEXP(MU_1+ETA(1))
+
+MU_2=LOG(THETA(2))
+Km=DEXP(MU_2+ETA(2))
+
+MU_3=LOG(THETA(3))
+V=DEXP(MU_3+ETA(3))
+
+TVA=THETA(4)
+alpha=TVA
+
+vectra(1)=alpha
+vectra(2)=Vmax
+vectra(3)=Km
+VECTRA(4)=V
+
+if(time.gt.0) then 
+tstep=0.02
+N=TIME/tstep
+Np=4
+Dim=1
+" CALL FDEGL(VECTRA,VECTRB,time,ff,int(N),Int(Dim),AMT,int(Np))
+ipre=ff*(V**(-1))
+else
+N=0 
+VECTRB(1)=AMT
+" CALL FDEGL(VECTRA,VECTRB,time,ff,int(N),Int(Dim),AMT,int(Np))
+ipre=ff*(V**(-1))
+endif
+
+Y=IPRE*(1+EPS(1))
+$THETA  
+       (0.01,0.1,8)
+       (0.1,3,8)
+       (1,4,15)
+      (0.1,0.45,0.9)
+$OMEGA  
+        0.02
+        0.02
+        0.03
+$SIGMA  0.05
+$EST METHOD=SAEM auto=1 print=100 OPTMAP=1 ETADER=1 NITER=200
+$COV
+$TABLE  ID AMT  TIME IPRE Y ONEHEADER NOAPPEND FILE=RESULTS.TXT
